@@ -9,9 +9,9 @@ This is a reproduction of *Learning and Transferring Deep Joint Spectral-Spatial
 * scipy
 * visdom
 ## Experiment
-模型分别在PaviaU，Salinas和KSC这三个基准数据集上进行测试。实验总共分为三组，分别为每类样本量为10，每类样本量为50和每类样本量为100。为了减少误差，每组实验分别进行10次，最终的准确率取10次实验的均值。源域与目标域对分别为：Pavia-PaviaU, Indian pines-Salinas, Indian pines-KSC。
+The model was tested on three benchmark data sets: PaviaU, Salinas and KSC. The experiment is divided into three groups, with the sample size of each category being 10, the sample size of each category being 50, and the sample size of each category being 100. In order to reduce errors, each set of experiments was conducted 10 times, and the final accuracy was taken as the average of 10 experiments. The source domain and target domain pairs are respectively：Pavia-PaviaU, Indian pines-Salinas, Indian pines-KSC。
 
-在PaviaU数据集上的准确率（%）如下表所示：
+在The accuracy (%) on the PaviaU data set is shown in the following table:
 
 <table>
 <tr align="center">
@@ -40,13 +40,13 @@ This is a reproduction of *Learning and Transferring Deep Joint Spectral-Spatial
 </tr>
 </table>
 
-学习曲线如下所示：
+The learning curve is as follows：
 
 ![img](img/PaviaU_sample_per_class_10_twoCnn.svg)
 ![img](img/PaviaU_sample_per_class_50_twoCnn.svg)
 ![img](img/PaviaU_sample_per_class_100_twoCnn.svg)
 
-在Salinas数据集上的准确率（%）如下表所示：
+The accuracy (%) on the Salinas data set is shown in the table below：
 
 <table>
 <tr align="center">
@@ -75,13 +75,13 @@ This is a reproduction of *Learning and Transferring Deep Joint Spectral-Spatial
 </tr>
 </table>
 
-学习曲线如下所示：
+The learning curve is as follows：
 
 ![img](img/Salinas_sample_per_class_10_twoCnn.svg)
 ![img](img/Salinas_sample_per_class_50_twoCnn.svg)
 ![img](img/Salinas_sample_per_class_100_twoCnn.svg)
 
-在KSC数据集上的准确率（%）如下表所示：
+The accuracy (%) on the KSC data set is shown in the following table:
 
 <table>
 <tr align="center">
@@ -110,12 +110,12 @@ This is a reproduction of *Learning and Transferring Deep Joint Spectral-Spatial
 </tr>
 </table>
 
-学习曲线如下所示：
+The learning curve is as follows：
 
 ![img](img/KSC_sample_per_class_10_twoCnn.svg)
 ![img](img/KSC_sample_per_class_50_twoCnn.svg)
 ![img](img/KSC_sample_per_class_100_twoCnn.svg)
 ## Runing the code
-预训练模型 `python train.py --name xx --epoch xx --lr xx`
+Pre-trained model `python train.py --name xx --epoch xx --lr xx`
 
 Fine-tuning `python CrossTrain.py --name xx --epoch xx --lr xx` 
