@@ -21,11 +21,11 @@ DEVICE = torch.device('cuda:2') if torch.cuda.is_available() else torch.device('
 viz = Visdom()
 def train(model, criterion, optimizer, dataLoader):
     '''
-    :param model: 模型
-    :param criterion: 目标函数
-    :param optimizer: 优化器
-    :param dataLoader: 批数据集
-    :return: 已训练的模型，训练损失的均值
+    :param model: Model
+    :param criterion: objective function
+    :param optimizer: optimizer
+    :param dataLoader: batch dataset
+    :return: Trained model, mean training loss
     '''
     model.train()
     model.to(DEVICE)
@@ -63,7 +63,7 @@ def test(model, criterion, dataLoader):
     return acc, np.mean(evalLoss)
 
 def main(datasetName):
-    # 加载数据和标签
+    # Load data and labels
     info = DatasetInfo.info[datasetName]
     root = 'data/{}'.format(datasetName)
     data_path = os.path.join(root, '{}.mat'.format(datasetName))
@@ -72,12 +72,12 @@ def main(datasetName):
     label_path = os.path.join(root, '{}_gt.mat'.format(datasetName))
     isExists(label_path)
     gt = loadmat(label_path)[info['label_key']]
-    # 去除噪声波段
+    # Remove noise bands
     data = denoise(datasetName, data)
-    # 数据集分割
+    # Data set segmentation
     rate = 0.9 if datasetName == 'Indian' else 0.15
     train_gt, test_gt = splitSampleByClass(gt, rate, SEED)
-    # 数据转换
+    # data conversion
     bands = data.shape[2]
     data, trainLabel, testLabel = data.astype(np.float32), train_gt.astype(np.int), test_gt.astype(np.int)
     nc = int(np.max(trainLabel))
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     parser.add_argument('--name', type=str, default='PaviaU',
                         help='The name of dataset')
     parser.add_argument('--epoch', type=int, default=1,
-                        help='模型的训练次数')
+                        help='Number of training times for the model')
     parser.add_argument('--lr', type=float, default=1e-1,
                         help='learning rate')
 
