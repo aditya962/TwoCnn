@@ -11,7 +11,7 @@ This is a reproduction of *Learning and Transferring Deep Joint Spectral-Spatial
 ## Experiment
 The model was tested on three benchmark data sets: PaviaU, Salinas and KSC. The experiment is divided into three groups, with the sample size of each category being 10, the sample size of each category being 50, and the sample size of each category being 100. In order to reduce errors, each set of experiments was conducted 10 times, and the final accuracy was taken as the average of 10 experiments. The source domain and target domain pairs are respectively：Pavia-PaviaU, Indian pines-Salinas, Indian pines-KSC。
 
-在The accuracy (%) on the PaviaU data set is shown in the following table:
+In The accuracy (%) on the PaviaU data set is shown in the following table:
 
 <table>
 <tr align="center">
