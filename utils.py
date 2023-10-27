@@ -22,7 +22,7 @@ def weight_init(m):
 def loadLabel(path):
     '''
     :param path:
-    :return: 训练样本标签， 测试样本标签
+    :return: training sample label, test sample label
     '''
     assert os.path.exists(path), '{},路径不存在'.format(path)
     # keys:{train_gt, test_gt}
@@ -32,18 +32,18 @@ def loadLabel(path):
 
 def splitSampleByClass(gt, ratio, seed=971104):
     '''
-    :param gt: 样本标签
-    :param ratio: 随机抽样每类样本的比例
-    :param seed: 随机种子
-    :return: 训练样本， 测试样本
+    :param gt: sample label
+    :param ratio: Proportion of samples of each type randomly sampled
+    :param seed: random seed
+    :return: training samples, test samples
     '''
-    # 设置随机种子
+    # Set random seed
     random.seed(seed)
     train_gt = np.zeros_like(gt)
     test_gt = np.copy(gt)
     train_indices = []
     nc = int(np.max(gt))
-    # 开始随机挑选样本
+    # Start randomly selecting samples
     for c in range(1, nc + 1):
         samples = np.nonzero(gt == c)
         sample_indices = list(zip(*samples))
@@ -55,7 +55,7 @@ def splitSampleByClass(gt, ratio, seed=971104):
     test_gt[indices] = 0
     return train_gt, test_gt
 
-# 去除噪声波段
+# Remove noise bands
 def denoise(datasetName, data):
     if datasetName == 'Salinas':
         h, w, _ = data.shape
