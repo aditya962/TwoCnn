@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-# 光谱特征分支，提取光谱特征
+# Spectral feature branch, extract spectral features
 class SeBranch(nn.Module):
     def __init__(self, bands):
         super().__init__()
@@ -21,7 +21,7 @@ class SeBranch(nn.Module):
         feature = self.relu(self.bn2(self.conv2(x_unsample_padding)))
         return feature
 
-# 空间特征分支，提取空间特征
+# Spatial feature branch, extract spatial features
 class SaBranch(nn.Module):
     def __init__(self):
         super().__init__()
@@ -39,7 +39,7 @@ class SaBranch(nn.Module):
         feature = self.relu(self.bn2(self.conv2(x_unsample)))
         return feature
 
-# 总体框架
+# overall framework
 class TwoCnn(nn.Module):
     def __init__(self, bands, nc):
         super().__init__()
