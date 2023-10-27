@@ -27,19 +27,19 @@ ROOT = None
 MODEL_NAME = 'TwoCnn'
 
 def main(datasetName, n_sample_per_class, run, preTrainedModel=None):
-    # 加载数据和标签
+    # Load data and labels
     info = DatasetInfo.info[datasetName]
     data_path = "./data/{}/{}.mat".format(datasetName, datasetName)
     label_path = './trainTestSplit/{}/sample{}_run{}.mat'.format(datasetName, n_sample_per_class, run)
     isExists(data_path)
     data = loadmat(data_path)[info['data_key']]
-    # 去除噪声波段
+    # Remove noise bands
     data = denoise(datasetName, data)
     bands = data.shape[2]
     isExists(label_path)
     trainLabel, testLabel = loadLabel(label_path)
     res = torch.zeros((3, EPOCHS))
-    # 数据转换
+    # data conversion
     data, trainLabel, testLabel = data.astype(np.float32), trainLabel.astype(np.int), testLabel.astype(np.int)
     nc = int(np.max(trainLabel))
     trainDataset = HSIDatasetV1(data, trainLabel, patchsz=21)
@@ -48,17 +48,17 @@ def main(datasetName, n_sample_per_class, run, preTrainedModel=None):
     testLoader = DataLoader(testDataset, batch_size=128, shuffle=True, num_workers=NUM_WORKERS)
     model = TwoCnn(bands, nc)
     model.apply(weight_init)
-    # 加载预训练模型参数
-    assert isExists(preTrainedModel), '预训练模型路径不存在'
+    # Load pre-trained model parameters
+    assert isExists(preTrainedModel), 'Pretrained model path does not exist'
     preTrainedModelDict = torch.load(preTrainedModel, map_location=torch.device('cpu'))
-    # 移除softmax层预训练参数
+    # Remove softmax layer pre-training parameters
     # classifier.2.weight classifier.2.bias
     preTrainedModelDict.pop('classifier.2.weight')
     preTrainedModelDict.pop('classifier.2.bias')
     modelDict = model.state_dict()
     modelDict.update(preTrainedModelDict)
     model.load_state_dict(modelDict)
-    # 损失函数，优化器，学习率下架管理器
+    # Loss function, optimizer, learning rate removal manager
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LR)
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.8)
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     parser.add_argument('--name', type=str, default='KSC',
                         help='The name of dataset')
     parser.add_argument('--epoch', type=int, default=1,
-                        help='模型的训练次数')
+                        help='Number of training times for the model')
     parser.add_argument('--lr', type=float, default=1e-1,
                         help='learning rate')
 
