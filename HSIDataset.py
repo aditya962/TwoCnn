@@ -16,32 +16,32 @@ class HSIDataset(Dataset):
         self.data = data # [h, w, bands]
         self.label = label # [h, w]
         self.patchsz = patchsz
-        # 原始数据的维度
+        # Dimensions of original data
         self.h, self.w, self.bands = self.data.shape
         self.Normalize()
         # self.get_mean()
-        # # 数据中心化
+        # # Data centralization
         # self.data -= self.mean
         self.addMirror()
 
-    # 数据归一化
+    # Data normalization
     def Normalize(self):
         data = self.data.reshape((self.h * self.w, self.bands))
         data -= np.min(data, axis=0)
         data /= np.max(data, axis=0)
         self.data = data.reshape((self.h, self.w, self.bands))
 
-    # 添加镜像
+    # Add image
     def addMirror(self):
         dx = self.patchsz // 2
         if dx != 0:
             mirror = np.zeros((self.h + 2 * dx, self.w + 2 * dx, self.bands))
             mirror[dx:-dx, dx:-dx, :] = self.data
             for i in range(dx):
-                # 填充左上部分镜像
+                # Fill the upper left part of the image
                 mirror[:, i, :] = mirror[:, 2 * dx - i, :]
                 mirror[i, :, :] = mirror[2 * dx - i, :, :]
-                # 填充右下部分镜像
+                # Fill in the lower right part of the image
                 mirror[:, -i - 1, :] = mirror[:, -(2 * dx - i) - 1, :]
                 mirror[-i - 1, :, :] = mirror[-(2 * dx - i) - 1, :, :]
             self.data = mirror
@@ -52,18 +52,18 @@ class HSIDataset(Dataset):
     def __getitem__(self, index):
         '''
         :param index:
-        :return: 元素光谱信息， 元素的空间信息， 标签
+        :return: Element spectral information, element spatial information, label
         '''
         l = index // self.w
         c = index % self.w
-        # 领域: [patchsz, patchsz, bands]
+        # field: [patchsz, patchsz, bands]
         neighbor_region = self.data[l:l + self.patchsz, c:c + self.patchsz, :]
-        # 取均值
+        # Take the mean
         # neighbor_region_mean = neighbor_region
         neighbor_region_mean = np.mean(neighbor_region, axis=-1, keepdims=True)
-        # 中心像素的光谱
+        # Spectrum of center pixel
         spectra = self.data[l + self.patchsz // 2, c + self.patchsz // 2]
-        # 类别
+        # category
         target = self.label[l, c] - 1
         return (torch.tensor(spectra, dtype=torch.float32), torch.tensor(neighbor_region_mean, dtype=torch.float32)), \
         torch.tensor(target, dtype=torch.long)
@@ -81,9 +81,9 @@ class HSIDatasetV1(HSIDataset):
         l, c = self.sampleIndex[index]
         spectra = self.data[l + self.patchsz // 2, c + self.patchsz // 2]
         neighbor_region = self.data[l:l + self.patchsz, c:c + self.patchsz, :]
-        # 标签从0开始编码
+        # Tags are encoded starting from 0
         target = self.label[l, c] - 1
-        # 取均值
+        # Take the mean
         neighbor_region_mean = np.mean(neighbor_region, axis=-1, keepdims=True)
         return (torch.tensor(spectra, dtype=torch.float32), torch.tensor(neighbor_region_mean, dtype=torch.float32)), \
                 torch.tensor(target, dtype=torch.long)
