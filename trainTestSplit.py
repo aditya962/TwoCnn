@@ -51,7 +51,7 @@ def sample_gt(gt, train_size, mode='fixed_withone'):
     else:
         raise ValueError("{} sampling is not implemented yet.".format(mode))
     return train_gt, test_gt
-# 保存样本
+# save sample
 def save_sample(train_gt, test_gt, dataset_name, sample_size, run):
     sample_dir = './trainTestSplit/' + dataset_name + '/'
     if not os.path.isdir(sample_dir):
@@ -64,7 +64,7 @@ def load(dname):
     dataset = loadmat(path)
     key = keys[dname]
     gt = dataset[key]
-    # 采样背景像素点
+    # Sample background pixels
     gt += 1
     return gt
 def main(root):
